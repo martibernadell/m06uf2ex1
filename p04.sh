@@ -1,33 +1,49 @@
 #!/bin/bash
 #Martí Bernadell Navarro
-clear
 
-echo "Dona'm un subdirectori per fer una copia de seguretat"
-echo
-if (( $# == 1 ))
+if [ $EUID -ne 0 ]
 then
-	if [[ ! -d /etc/$1 ]]
+	echo "Aquest script s'ha d'executar amb l'ordre sudo"
+	exit 1
+	
+fi
+
+function Inici {
+	clear
+	echo -n "Escriu el nom d'un fitxer del directori /etc:"
+	echo -n 
+	read Fitxer
+	
+	cd /etc
+	if [[ ! -e "$Fitxer" ]]
 	then
-		echo -n "El subdirectori no existeix. El vols crear? (s/n)?: "
-		read opc
-	if [[ $opc != "s" ]] && [[ $opc != "S" ]]
-	then
-			echo $opc
-			echo "No es crea el directori"
-			exit 1
-			
-			
+		echo "El Fitxer $Fitxer no existeix. Tancant programa."
+		exit 2
+		
 	else
-			mkdir /etc/$1
-		fi
+		cp "$Fitxer" "$Fitxer".orig
+		gzip -9 "$Fitxer".orig
+		wc -c "$Fitxer".orig.gz
 	fi
-else
-	echo "S'ha de passar un paràmetre. El paràmetre és una carpeta dins de /etc"
-			exit 2
+	return 0
+}
+
+
+
+
+
+	cont=0
+	while [[ $cont == 0 ]]
+	do
+	
+		Inici
+		echo ""
+		echo -n "Vols continuar? "
+		read cont
+	done
+
+
+exit 15
+
+
 			
-			
-	fi
-nom_backup=/etc/$1/resolv.conf.backup.
-cp /etc/resolv.conf $nom_backup 
-gzip $nom_backup
-			exit 15
