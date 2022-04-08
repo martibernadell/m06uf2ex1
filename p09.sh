@@ -22,4 +22,4 @@ do
 	
 done
 
-resposta="s"
+
