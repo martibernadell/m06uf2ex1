@@ -1,24 +1,25 @@
 #!/bin/bash
-  clear
-echo "Dona'm el nom del grup:" 
-read -r remove group
-[ -n $deletegroup ] 
+#Martí Bernadell Navarro
 
 
-if [ $? -ne 0 ]
-then
-	if [[ ! -d /etc/$1 ]]
-	then
-		echo -n "De veritat el vols borrar?"
-		read opc
-	if [[ $opc != "s" ]] && [[ $opc != "S" ]]
-	then
-			echo $opc
-			echo "No es borra el grup"
-				exit 1
+clear
+
+
+while [[ $opc != "s" ]] && [[ $opc != "S" ]]
+do
+	clear
+
+	echo "Dona'm un grup que has de borrar, ves en compte, ja que el grup es borrara: "
+	read group > /dev/null 2>&1
 	
-		
-		else
-                 echo "Borrant..."
-						exit 2
-		fi
+	echo "Confirma la teva resposta? (s/n):"
+	read resposta
+
+	groupdel -f $group
+	
+	exit 2
+	
+	
+done
+
+resposta="s"
